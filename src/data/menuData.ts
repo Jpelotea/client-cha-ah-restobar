@@ -285,9 +285,9 @@ export const SUNDAY_BUFFET_DETAILS = {
   price: 649,
   currency: 'PHP',
   schedule: [
-    { title: 'Unlimited Lunch Feast', time: '10:30 AM – 2:30 PM', note: 'Full spread with live carving & noodle stations' },
-    { title: 'À la Carte & Happy Hour', time: '2:30 PM – 4:30 PM', note: '20% off selected refreshments & specialty cocktails' },
-    { title: 'Unlimited Dinner Gala', time: '5:30 PM – 10:00 PM', note: 'Evening banquet with live acoustic band performance' }
+    { title: 'Unlimited Lunch Feast', time: '11:00 AM – 1:30 PM', note: 'Full spread with live carving & noodle stations' },
+    { title: 'Mid-Day Intermission', time: '1:30 PM – 5:00 PM', note: 'Kitchen rest & evening banquet preparation' },
+    { title: 'Unlimited Dinner Gala', time: '5:00 PM – 10:00 PM', note: 'Evening banquet with live acoustic band performance' }
   ],
   features: [
     'Unlimited Thai Pad Thai, Curry & Stir-Fried Specialties',
@@ -316,9 +316,12 @@ export const BUSINESS_INFO = {
     tiktok: "https://www.tiktok.com/@chaahrestobar"
   },
   hours: {
-    weekday: "Monday – Thursday: 10:30 AM – 10:00 PM",
-    weekend: "Friday – Saturday: 10:30 AM – 11:00 PM (Bar extended to 12:00 AM)",
-    sunday: "Sunday: Unli Buffet (10:30 AM – 2:30 PM & 5:30 PM – 10:00 PM)"
+    scheduleNotice: "Effective April 21, 2026",
+    lunch: "Lunch Service: 11:00 AM – 1:30 PM",
+    break: "Mid-Day Break: Closed (1:30 PM – 5:00 PM)",
+    evening: "Evening Service: 5:00 PM – 10:00 PM",
+    days: "Open Daily (Mondays through Sundays)",
+    summary: "Lunch 11:00 AM – 1:30 PM · Evening 5:00 PM – 10:00 PM"
   }
 };
 

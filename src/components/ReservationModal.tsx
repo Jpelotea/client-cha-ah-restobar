@@ -414,13 +414,19 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                     onChange={(e) => setTimeSlot(e.target.value)}
                     className="w-full bg-[#121d15] border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-[#dcb35c]"
                   >
-                    <option value="10:30">10:30 AM (Lunch / Morning)</option>
-                    <option value="12:00">12:00 PM (Lunch)</option>
-                    <option value="14:00">2:00 PM (Afternoon)</option>
-                    <option value="16:00">4:00 PM (Late Afternoon)</option>
-                    <option value="17:30">5:30 PM (Dinner & Sunset)</option>
-                    <option value="18:30">6:30 PM (Dinner / Evening Gala)</option>
-                    <option value="19:30">7:30 PM (Dinner & Acoustic)</option>
+                    <optgroup label="Lunch Service (11:00 AM – 1:30 PM)">
+                      <option value="11:00">11:00 AM (Lunch Opening)</option>
+                      <option value="11:30">11:30 AM (Lunch Service)</option>
+                      <option value="12:00">12:00 PM (Midday Rush)</option>
+                      <option value="12:30">12:30 PM (Lunch Service)</option>
+                    </optgroup>
+                    <optgroup label="Evening Service (5:00 PM – 10:00 PM)">
+                      <option value="17:00">5:00 PM (Dinner Opening)</option>
+                      <option value="17:30">5:30 PM (Dinner Service)</option>
+                      <option value="18:30">6:30 PM (Evening Dining)</option>
+                      <option value="19:30">7:30 PM (Dinner & Acoustic)</option>
+                      <option value="20:30">8:30 PM (Late Dinner & Cocktails)</option>
+                    </optgroup>
                   </select>
                 </div>
               </div>

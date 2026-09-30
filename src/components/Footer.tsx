@@ -5,7 +5,7 @@ import { BUSINESS_INFO } from '../data/menuData';
 
 export const Footer: React.FC<{ onOpenPitch: () => void }> = ({ onOpenPitch }) => {
   return (
-    <footer className="bg-[#070b08] border-t border-white/10 pt-16 pb-12 text-zinc-400 text-xs">
+    <footer className="bg-[#070b08] border-t border-white/10 pt-16 pb-24 lg:pb-12 text-zinc-400 text-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-white/5">
           {/* Col 1: Brand Wordmark & Story */}
@@ -85,16 +85,20 @@ export const Footer: React.FC<{ onOpenPitch: () => void }> = ({ onOpenPitch }) =
             </h4>
             <div className="space-y-2 text-zinc-400 text-xs">
               <div>
-                <strong className="text-zinc-200 block">Mon – Thu:</strong>
-                <span>10:30 AM – 10:00 PM</span>
+                <strong className="text-zinc-200 block">Open Daily:</strong>
+                <span className="text-[#f5de99]">Mondays through Sundays</span>
               </div>
               <div>
-                <strong className="text-zinc-200 block">Fri – Sat:</strong>
-                <span>10:30 AM – 11:00 PM (Bar till 12:00 AM)</span>
+                <strong className="text-zinc-200 block">Lunch Service:</strong>
+                <span>11:00 AM – 1:30 PM</span>
               </div>
               <div>
-                <strong className="text-zinc-200 block">Sunday:</strong>
-                <span>Unli Buffet: 10:30 AM – 2:30 PM & 5:30 PM – 10:00 PM</span>
+                <strong className="text-zinc-400 block text-[11px]">Mid-Day Break (Closed):</strong>
+                <span className="text-zinc-500">1:30 PM – 5:00 PM</span>
+              </div>
+              <div>
+                <strong className="text-zinc-200 block">Evening Service:</strong>
+                <span>5:00 PM – 10:00 PM</span>
               </div>
             </div>
           </div>
