@@ -40,13 +40,13 @@ export const AtmosphereSection: React.FC<AtmosphereSectionProps> = ({ onOpenEven
       title: 'Luminarium Events Place',
       subtitle: 'Adjacent Premier Gathering Venue',
       description:
-        'Planning a milestone birthday, wedding reception, christening, or corporate banquet? Our adjacent Luminarium Events Place provides a spacious, elegant setting with full Cha’ah Restobar catering packages tailored to your celebration.',
-      image: '/src/assets/images/food_crispy_sisig_karekare_1790732250636.jpg',
+        'Planning a corporate summit, debut, birthday, or private gathering? Our adjacent Luminarium Events Place accommodates up to 100 persons for as low as ₱12,000 (first 4 hours), with ZERO corkage fee for outside food, drinks, and decor!',
+      image: '/src/assets/images/luminarium_events_venue_1790733593503.jpg',
       highlights: [
-        'Dedicated event hall accommodating 50 to 200+ guests',
-        'Customized Thai, Filipino & American fusion buffet spreads',
-        'Integrated audio-visual setup and banquet service team',
-        'Ample guest parking with easy access along CT Montalban'
+        '₱12,000 for first 4 hours (₱2,500 each succeeding hour) · Max 100 pax',
+        'NO CORKAGE FEE for Food & Drinks and Backdrop / Decorations',
+        'Includes Lights & Sound System, Water Station, Chairs & Table Set-up, 2 Staff',
+        'Optional Mobile Bar, Dessert Station, Coffee Bar & Service Crew add-ons'
       ]
     }
   };

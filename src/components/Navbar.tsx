@@ -28,6 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navLinks = [
     { label: 'Fusion Menu', href: '#menu' },
     { label: 'Sunday Buffet', href: '#buffet' },
+    { label: 'Luminarium Venue', href: '#luminarium' },
     { label: 'The Restobar', href: '#vibe' },
     { label: 'Schedule', href: '#schedule' },
     { label: 'Location', href: '#location' }
@@ -43,8 +44,8 @@ export const Navbar: React.FC<NavbarProps> = ({
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-12">
-            {/* Zone 1: Single Brand Wordmark */}
+          <div className="flex items-center justify-between h-14">
+            {/* Zone 1: Brand Logo */}
             <a
               href="#"
               className="group flex items-center transition-transform duration-200 hover:scale-[1.02]"
@@ -187,6 +188,32 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                 <a href={`tel:${BUSINESS_INFO.phone}`} className="hover:underline">
                   {BUSINESS_INFO.phone}
+                </a>
+              </div>
+              <div className="pt-2 flex items-center gap-2 text-[11px]">
+                <a
+                  href={BUSINESS_INFO.social.facebook}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-2 py-1 rounded bg-white/5 text-zinc-300 hover:text-white"
+                >
+                  Facebook
+                </a>
+                <a
+                  href={BUSINESS_INFO.social.instagram}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-2 py-1 rounded bg-pink-950/40 text-pink-300 hover:text-pink-200"
+                >
+                  Instagram
+                </a>
+                <a
+                  href={BUSINESS_INFO.social.tiktok}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-2 py-1 rounded bg-cyan-950/40 text-cyan-300 hover:text-cyan-200"
+                >
+                  TikTok
                 </a>
               </div>
             </div>

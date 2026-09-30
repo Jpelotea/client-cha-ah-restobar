@@ -19,7 +19,7 @@ export const Footer: React.FC<{ onOpenPitch: () => void }> = ({ onOpenPitch }) =
                 href={BUSINESS_INFO.social.facebook}
                 target="_blank"
                 rel="noreferrer"
-                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white transition-colors"
+                className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white transition-colors"
                 aria-label="Cha'ah Restobar Facebook"
               >
                 Facebook
@@ -28,16 +28,25 @@ export const Footer: React.FC<{ onOpenPitch: () => void }> = ({ onOpenPitch }) =
                 href={BUSINESS_INFO.social.instagram}
                 target="_blank"
                 rel="noreferrer"
-                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white transition-colors"
+                className="px-3 py-1.5 rounded-lg bg-pink-950/30 hover:bg-pink-900/40 text-pink-300 hover:text-pink-200 border border-pink-800/30 transition-colors"
                 aria-label="Cha'ah Restobar Instagram"
               >
                 Instagram
               </a>
+              <a
+                href={BUSINESS_INFO.social.tiktok}
+                target="_blank"
+                rel="noreferrer"
+                className="px-3 py-1.5 rounded-lg bg-cyan-950/30 hover:bg-cyan-900/40 text-cyan-300 hover:text-cyan-200 border border-cyan-800/30 transition-colors"
+                aria-label="Cha'ah Restobar TikTok"
+              >
+                TikTok
+              </a>
               <button
                 onClick={onOpenPitch}
-                className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 hover:bg-amber-500/20 transition-colors"
+                className="px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 hover:bg-amber-500/20 transition-colors"
               >
-                Client Pitch Deck
+                Pitch Deck
               </button>
             </div>
           </div>
@@ -53,6 +62,9 @@ export const Footer: React.FC<{ onOpenPitch: () => void }> = ({ onOpenPitch }) =
               </li>
               <li>
                 <a href="#buffet" className="hover:text-white transition-colors">Sunday Buffet (₱649)</a>
+              </li>
+              <li>
+                <a href="#luminarium" className="hover:text-white transition-colors">Luminarium Venue (₱12,000)</a>
               </li>
               <li>
                 <a href="#vibe" className="hover:text-white transition-colors">The Restobar & Patio</a>

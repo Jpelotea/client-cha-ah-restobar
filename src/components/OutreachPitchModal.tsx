@@ -123,7 +123,7 @@ export const OutreachPitchModal: React.FC<OutreachPitchModalProps> = ({ isOpen, 
               <li>Active PHT Real-Time Open/Closed status calculator with daily schedule awareness.</li>
               <li>Filterable Thai, Filipino & American culinary catalog with tasting plan pre-ordering.</li>
               <li>Sunday ₱649 Unli Buffet showcase with session timetable and instant table reserving.</li>
-              <li>Luminarium Events Place showcase for banquet inquiries.</li>
+              <li>Luminarium Events Place showcase with official ₱12,000 rates, zero corkage policy, and interactive package & add-on calculator.</li>
               <li>Mobile-first responsive drawer and one-tap calling & navigation.</li>
             </ul>
           </div>

@@ -8,6 +8,7 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { MenuSection } from './components/MenuSection';
 import { SundayBuffetSection } from './components/SundayBuffetSection';
+import { LuminariumSection, LuminariumBookingConfiguration } from './components/LuminariumSection';
 import { AtmosphereSection } from './components/AtmosphereSection';
 import { ScheduleSection } from './components/ScheduleSection';
 import { LocationSection } from './components/LocationSection';
@@ -20,12 +21,19 @@ import { Sparkles, X } from 'lucide-react';
 export default function App() {
   const [isReservationOpen, setIsReservationOpen] = useState(false);
   const [reservationType, setReservationType] = useState('general');
+  const [luminariumConfig, setLuminariumConfig] = useState<LuminariumBookingConfiguration | null>(null);
   const [isPitchOpen, setIsPitchOpen] = useState(false);
   const [wishlist, setWishlist] = useState<MenuItem[]>([]);
   const [showOutreachBanner, setShowOutreachBanner] = useState(true);
 
   const handleOpenReservation = (type: string = 'general') => {
     setReservationType(type);
+    setIsReservationOpen(true);
+  };
+
+  const handleBookLuminarium = (config: LuminariumBookingConfiguration) => {
+    setLuminariumConfig(config);
+    setReservationType('event');
     setIsReservationOpen(true);
   };
 
@@ -105,6 +113,9 @@ export default function App() {
 
         <SundayBuffetSection onOpenReservation={handleOpenReservation} />
 
+        {/* Luminarium Events Place Official Section */}
+        <LuminariumSection onBookLuminarium={handleBookLuminarium} />
+
         <AtmosphereSection
           onOpenEventInquiry={() => handleOpenReservation('event')}
         />
@@ -123,6 +134,7 @@ export default function App() {
         onClose={() => setIsReservationOpen(false)}
         defaultType={reservationType}
         wishlist={wishlist}
+        luminariumConfig={luminariumConfig}
       />
 
       {/* Prospective Client Outreach & Pitch Presentation Modal */}

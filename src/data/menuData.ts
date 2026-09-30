@@ -312,11 +312,103 @@ export const BUSINESS_INFO = {
   },
   social: {
     facebook: "https://www.facebook.com/ChaahRestobar/",
-    instagram: "https://www.instagram.com/chaahrestobar/?hl=en"
+    instagram: "https://www.instagram.com/chaahrestobar",
+    tiktok: "https://www.tiktok.com/@chaahrestobar"
   },
   hours: {
     weekday: "Monday – Thursday: 10:30 AM – 10:00 PM",
     weekend: "Friday – Saturday: 10:30 AM – 11:00 PM (Bar extended to 12:00 AM)",
     sunday: "Sunday: Unli Buffet (10:30 AM – 2:30 PM & 5:30 PM – 10:00 PM)"
   }
+};
+
+export interface LuminariumAddon {
+  id: string;
+  name: string;
+  category: 'mobile-bar' | 'dessert-station' | 'coffee-station' | 'service-crew';
+  paxLabel?: string;
+  price: number;
+  description: string;
+}
+
+export const LUMINARIUM_DETAILS = {
+  name: "Luminarium Events Place",
+  tagline: "Premier Gathering Venue by Cha'ah Restobar",
+  capacityMax: 100,
+  basePrice: 12000,
+  baseHours: 4,
+  succeedingHourPrice: 2500,
+  eventTypes: [
+    { title: "Corporate Events", subtitle: "Conferences, Seminars & Business Dinners", icon: "briefcase" },
+    { title: "Birthdays / Special Occasions", subtitle: "Debuts, Anniversaries & Milestones", icon: "cake" },
+    { title: "Small Gatherings / Parties", subtitle: "Reunions, Showers & Intimate Celebrations", icon: "users" }
+  ],
+  inclusions: [
+    "Lights & Sound System",
+    "Water Station",
+    "Chairs & Table Set-up (as presented)",
+    "Staff Assistance (2 Pax)"
+  ],
+  noCorkage: [
+    "Food & Drinks",
+    "Backdrop / Decorations"
+  ],
+  addons: [
+    {
+      id: "mobile-bar-premium",
+      category: "mobile-bar",
+      name: "Mobile Bar — Premium Package",
+      paxLabel: "50 pax",
+      price: 13000,
+      description: "Artisan mobile cocktail setup with signature Cha'ah mixed drinks, juices & professional bartenders."
+    },
+    {
+      id: "mobile-bar-vip",
+      category: "mobile-bar",
+      name: "Mobile Bar — VIP Package",
+      paxLabel: "100 pax",
+      price: 22500,
+      description: "Full-capacity mobile bar service, top-shelf liquor, signature cocktails & dedicated bar staff."
+    },
+    {
+      id: "dessert-station-premium",
+      category: "dessert-station",
+      name: "Dessert Station — Premium Package",
+      paxLabel: "50 pax",
+      price: 10000,
+      description: "Decadent dessert spread featuring custom mini pastries, specialty cakes & sweet delicacies."
+    },
+    {
+      id: "coffee-station-classic",
+      category: "coffee-station",
+      name: "Coffee Station — Classic Package",
+      paxLabel: "30 pax",
+      price: 7000,
+      description: "Freshly brewed artisan coffee, espresso options, condiments & warm cups."
+    },
+    {
+      id: "coffee-station-premium",
+      category: "coffee-station",
+      name: "Coffee Station — Premium Package",
+      paxLabel: "50 pax",
+      price: 11000,
+      description: "Artisan hot & iced coffee bar, specialty syrups, and Barista service."
+    },
+    {
+      id: "coffee-station-vip",
+      category: "coffee-station",
+      name: "Coffee Station — VIP Package",
+      paxLabel: "100 pax",
+      price: 21000,
+      description: "Full 100-pax espresso, cold brew & matcha station with dedicated baristas throughout the event."
+    },
+    {
+      id: "service-crew",
+      category: "service-crew",
+      name: "Additional Service Crew",
+      paxLabel: "Per Person",
+      price: 500,
+      description: "Trained hospitality staff to attend tables, assist dining, and manage guest needs."
+    }
+  ]
 };

@@ -110,7 +110,7 @@ export const LocationSection: React.FC = () => {
                     >
                       {BUSINESS_INFO.email}
                     </a>
-                    <div className="mt-3 flex items-center gap-2">
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
                       <a
                         href={BUSINESS_INFO.social.facebook}
                         target="_blank"
@@ -118,7 +118,7 @@ export const LocationSection: React.FC = () => {
                         className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-900/40 text-blue-300 border border-blue-700/50 hover:bg-blue-800/50 transition-colors flex items-center gap-1.5"
                       >
                         <MessageSquare className="w-3.5 h-3.5" />
-                        <span>Facebook Page</span>
+                        <span>Facebook</span>
                       </a>
                       <a
                         href={BUSINESS_INFO.social.instagram}
@@ -128,6 +128,15 @@ export const LocationSection: React.FC = () => {
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                         <span>Instagram</span>
+                      </a>
+                      <a
+                        href={BUSINESS_INFO.social.tiktok}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-950/50 text-cyan-300 border border-cyan-700/50 hover:bg-cyan-900/50 transition-colors flex items-center gap-1.5"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                        <span>TikTok</span>
                       </a>
                     </div>
                   </div>

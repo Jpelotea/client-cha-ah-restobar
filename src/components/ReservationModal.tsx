@@ -1,25 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Calendar, Clock, Users, CheckCircle2, MessageCircle, Phone, Sparkles, MapPin, Send } from 'lucide-react';
-import { MenuItem, BUSINESS_INFO } from '../data/menuData';
+import { X, Calendar, Clock, Users, CheckCircle2, MessageCircle, Phone, Sparkles, MapPin, Send, ShieldCheck, Wine, Cake, Coffee, UserPlus } from 'lucide-react';
+import { MenuItem, BUSINESS_INFO, LUMINARIUM_DETAILS } from '../data/menuData';
+import { LuminariumBookingConfiguration } from './LuminariumSection';
 
 interface ReservationModalProps {
   isOpen: boolean;
   onClose: () => void;
   defaultType?: string;
   wishlist?: MenuItem[];
+  luminariumConfig?: LuminariumBookingConfiguration | null;
 }
 
 export const ReservationModal: React.FC<ReservationModalProps> = ({
   isOpen,
   onClose,
   defaultType = 'general',
-  wishlist = []
+  wishlist = [],
+  luminariumConfig = null
 }) => {
   const [bookingType, setBookingType] = useState<string>(
-    defaultType === 'sunday-buffet' ? 'sunday-buffet' : defaultType === 'event' ? 'event' : 'regular'
+    defaultType === 'sunday-buffet'
+      ? 'sunday-buffet'
+      : defaultType === 'event' || defaultType === 'luminarium'
+      ? 'event'
+      : 'regular'
   );
-  const [guestCount, setGuestCount] = useState<number>(defaultType === 'sunday-buffet' ? 4 : 2);
+
+  // Synchronize when defaultType changes
+  useEffect(() => {
+    if (defaultType === 'sunday-buffet') {
+      setBookingType('sunday-buffet');
+      setGuestCount(4);
+    } else if (defaultType === 'event' || defaultType === 'luminarium') {
+      setBookingType('event');
+      setGuestCount(50);
+      setSeatingArea('private-hall');
+    }
+  }, [defaultType]);
+
+  const [guestCount, setGuestCount] = useState<number>(
+    defaultType === 'sunday-buffet' ? 4 : defaultType === 'event' ? 50 : 2
+  );
   const [guestName, setGuestName] = useState<string>('');
   const [guestPhone, setGuestPhone] = useState<string>('');
   const [guestEmail, setGuestEmail] = useState<string>('');
@@ -34,6 +56,26 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [confirmationCode, setConfirmationCode] = useState<string>('');
 
+  // Luminarium specific parameters
+  const [eventDuration, setEventDuration] = useState<number>(luminariumConfig?.durationHours || 4);
+  const [eventEventType, setEventEventType] = useState<string>('Corporate Event');
+  const [mobileBar, setMobileBar] = useState<string>(luminariumConfig?.mobileBarPackage || 'none');
+  const [dessertStation, setDessertStation] = useState<string>(luminariumConfig?.dessertPackage || 'none');
+  const [coffeeStation, setCoffeeStation] = useState<string>(luminariumConfig?.coffeePackage || 'none');
+  const [extraCrew, setExtraCrew] = useState<number>(luminariumConfig?.serviceCrewCount || 0);
+
+  // Calculate Luminarium estimate if bookingType is event
+  const luminariumEstimate = React.useMemo(() => {
+    if (bookingType !== 'event') return 0;
+    const base = 12000;
+    const extraHrs = Math.max(0, eventDuration - 4) * 2500;
+    const bar = mobileBar === 'premium' ? 13000 : mobileBar === 'vip' ? 22500 : 0;
+    const dessert = dessertStation === 'premium' ? 10000 : 0;
+    const coffee = coffeeStation === 'classic' ? 7000 : coffeeStation === 'premium' ? 11000 : coffeeStation === 'vip' ? 21000 : 0;
+    const crew = extraCrew * 500;
+    return base + extraHrs + bar + dessert + coffee + crew;
+  }, [bookingType, eventDuration, mobileBar, dessertStation, coffeeStation, extraCrew]);
+
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -41,7 +83,8 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
     if (!guestName || !guestPhone) return;
 
     // Generate readable confirmation code
-    const randomCode = `CHA-${Math.floor(1000 + Math.random() * 9000)}`;
+    const prefix = bookingType === 'event' ? 'LUM' : bookingType === 'sunday-buffet' ? 'BUF' : 'CHA';
+    const randomCode = `${prefix}-${Math.floor(1000 + Math.random() * 9000)}`;
     setConfirmationCode(randomCode);
     setIsSubmitted(true);
   };
@@ -53,20 +96,25 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
 
   const getCalendarLink = () => {
     const title = encodeURIComponent(
-      bookingType === 'sunday-buffet'
+      bookingType === 'event'
+        ? `Luminarium Event (${eventEventType}) - Cha'ah Restobar`
+        : bookingType === 'sunday-buffet'
         ? "Cha'ah Restobar Sunday Unlimited Buffet"
         : "Dining at Cha'ah Restobar Butuan"
     );
     const details = encodeURIComponent(
-      `Reservation under ${guestName} for ${guestCount} guests at Cha'ah Restobar. Reference: ${confirmationCode}. Contact: +63 915 093 8706.`
+      `Reservation under ${guestName} for ${guestCount} guests at Cha'ah Restobar / Luminarium. Reference: ${confirmationCode}. Contact: +63 915 093 8706.`
     );
     const location = encodeURIComponent(BUSINESS_INFO.address);
     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}`;
   };
 
   const getSmsLink = () => {
+    const details = bookingType === 'event'
+      ? `Luminarium Event: ${eventDuration}hrs, est. ₱${luminariumEstimate.toLocaleString()}`
+      : bookingType;
     const message = encodeURIComponent(
-      `Hi Cha'ah Restobar! I would like to confirm my table reservation ${confirmationCode} under ${guestName} on ${reservationDate} at ${timeSlot} for ${guestCount} guests (${bookingType}). Thank you!`
+      `Hi Cha'ah Restobar & Luminarium! I would like to confirm booking ${confirmationCode} under ${guestName} on ${reservationDate} at ${timeSlot} for ${guestCount} pax (${details}). Thank you!`
     );
     return `sms:+639150938706?body=${message}`;
   };
@@ -97,11 +145,15 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
             </div>
             <div>
               <h3 className="text-lg font-bold text-white">
-                {isSubmitted ? 'Reservation Confirmed' : 'Reserve a Table at Cha\'ah'}
+                {isSubmitted
+                  ? 'Booking Request Received'
+                  : bookingType === 'event'
+                  ? 'Reserve Luminarium Events Place'
+                  : 'Reserve a Table at Cha\'ah'}
               </h3>
               <p className="text-xs text-zinc-400">
                 {isSubmitted
-                  ? 'Your table request has been received'
+                  ? 'Reference saved · Instant staff notification'
                   : 'CT Montalban Street, Villa Kananga, Butuan City'}
               </p>
             </div>
@@ -140,19 +192,41 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
               {/* Booking Summary Box */}
               <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-left text-xs space-y-2 max-w-md mx-auto">
                 <div className="flex justify-between">
-                  <span className="text-zinc-400">Dining Experience:</span>
-                  <span className="font-semibold text-white capitalize">
+                  <span className="text-zinc-400">Experience / Venue:</span>
+                  <span className="font-semibold text-white">
                     {bookingType === 'sunday-buffet'
-                      ? 'Sunday Unlimited Buffet (₱649)'
+                      ? 'Sunday Unlimited Buffet (₱649/pax)'
                       : bookingType === 'event'
-                      ? 'Luminarium Private Event'
+                      ? `Luminarium Events Place (${eventDuration} Hours)`
                       : 'À la Carte Fusion Dining'}
                   </span>
                 </div>
+
+                {bookingType === 'event' && (
+                  <>
+                    <div className="flex justify-between">
+                      <span className="text-zinc-400">Occasion Type:</span>
+                      <span className="font-semibold text-white">{eventEventType}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-zinc-400">Estimated Total Quote:</span>
+                      <span className="font-semibold text-[#dcb35c] font-mono text-sm">
+                        ₱{luminariumEstimate.toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-emerald-400">
+                      <span>Corkage Policy:</span>
+                      <span>FREE (No corkage on Food, Drinks & Decor)</span>
+                    </div>
+                  </>
+                )}
+
                 <div className="flex justify-between">
-                  <span className="text-zinc-400">Seating Area:</span>
+                  <span className="text-zinc-400">Seating Preference:</span>
                   <span className="font-semibold text-white">
-                    {seatingArea === 'indoor-booth'
+                    {bookingType === 'event'
+                      ? 'Luminarium Main Glass Hall'
+                      : seatingArea === 'indoor-booth'
                       ? 'Cozy Indoor Green Velvet Booth'
                       : seatingArea === 'patio'
                       ? 'Outdoor Garden Acoustic Patio'
@@ -165,7 +239,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                 </div>
                 {wishlist.length > 0 && (
                   <div className="pt-2 border-t border-white/10">
-                    <span className="text-zinc-400 block mb-1">Pre-Selected Tasting Plan:</span>
+                    <span className="text-zinc-400 block mb-1">Attached Tasting Plan:</span>
                     <span className="text-amber-300 font-medium">
                       {wishlist.map((w) => w.name).join(', ')}
                     </span>
@@ -206,7 +280,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
           ) : (
             /* Reservation Form */
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Dining Experience Selector */}
+              {/* Experience Selector */}
               <div>
                 <label className="text-xs font-bold uppercase tracking-wider text-zinc-300 block mb-2">
                   Select Experience
@@ -214,7 +288,10 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                 <div className="grid grid-cols-3 gap-2">
                   <button
                     type="button"
-                    onClick={() => setBookingType('regular')}
+                    onClick={() => {
+                      setBookingType('regular');
+                      setGuestCount(2);
+                    }}
                     className={`p-3 rounded-xl text-xs font-semibold border text-center transition-all ${
                       bookingType === 'regular'
                         ? 'bg-amber-400/20 border-amber-400 text-amber-300'
@@ -225,7 +302,10 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                   </button>
                   <button
                     type="button"
-                    onClick={() => setBookingType('sunday-buffet')}
+                    onClick={() => {
+                      setBookingType('sunday-buffet');
+                      setGuestCount(4);
+                    }}
                     className={`p-3 rounded-xl text-xs font-semibold border text-center transition-all ${
                       bookingType === 'sunday-buffet'
                         ? 'bg-amber-400/20 border-amber-400 text-amber-300'
@@ -236,17 +316,79 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                   </button>
                   <button
                     type="button"
-                    onClick={() => setBookingType('event')}
+                    onClick={() => {
+                      setBookingType('event');
+                      setGuestCount(50);
+                    }}
                     className={`p-3 rounded-xl text-xs font-semibold border text-center transition-all ${
                       bookingType === 'event'
                         ? 'bg-amber-400/20 border-amber-400 text-amber-300'
                         : 'bg-white/5 border-white/10 text-zinc-400 hover:text-white'
                     }`}
                   >
-                    Luminarium Event
+                    Luminarium Events Place
                   </button>
                 </div>
               </div>
+
+              {/* Luminarium Specific Options */}
+              {bookingType === 'event' && (
+                <div className="p-4 rounded-2xl bg-[#142218] border border-amber-500/40 space-y-3.5">
+                  <div className="flex items-center justify-between pb-2 border-b border-white/10">
+                    <span className="text-xs font-bold text-amber-300 uppercase tracking-wider">
+                      Luminarium Venue Package (₱12,000 / 4 hrs)
+                    </span>
+                    <span className="text-[11px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800/40">
+                      Zero Corkage Fee
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                    <div>
+                      <label className="text-[11px] font-bold uppercase text-zinc-300 block mb-1">
+                        Occasion Type
+                      </label>
+                      <select
+                        value={eventEventType}
+                        onChange={(e) => setEventEventType(e.target.value)}
+                        className="w-full bg-[#0f1712] border border-white/15 rounded-lg px-2.5 py-2 text-xs text-white"
+                      >
+                        <option value="Corporate Event">Corporate Event / Seminar</option>
+                        <option value="Birthday / Debut">Birthday / 18th Debut</option>
+                        <option value="Anniversary">Anniversary Celebration</option>
+                        <option value="Wedding / Reception">Wedding Reception</option>
+                        <option value="Party / Reunion">Reunion / Party</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="text-[11px] font-bold uppercase text-zinc-300 block mb-1">
+                        Duration
+                      </label>
+                      <select
+                        value={eventDuration}
+                        onChange={(e) => setEventDuration(Number(e.target.value))}
+                        className="w-full bg-[#0f1712] border border-white/15 rounded-lg px-2.5 py-2 text-xs text-white font-mono"
+                      >
+                        <option value={4}>4 Hours (₱12,000 Base)</option>
+                        <option value={5}>5 Hours (+₱2,500)</option>
+                        <option value={6}>6 Hours (+₱5,000)</option>
+                        <option value={7}>7 Hours (+₱7,500)</option>
+                        <option value={8}>8 Hours (+₱10,000)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
+                    <span className="text-zinc-300">
+                      Estimated Venue Total:
+                    </span>
+                    <span className="text-base font-bold font-mono text-[#dcb35c]">
+                      ₱{luminariumEstimate.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              )}
 
               {/* Date & Time */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -265,22 +407,20 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
 
                 <div>
                   <label className="text-xs font-bold uppercase tracking-wider text-zinc-300 block mb-1.5">
-                    Time Slot
+                    Start Time
                   </label>
                   <select
                     value={timeSlot}
                     onChange={(e) => setTimeSlot(e.target.value)}
                     className="w-full bg-[#121d15] border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-[#dcb35c]"
                   >
-                    <option value="11:00">11:00 AM (Lunch)</option>
+                    <option value="10:30">10:30 AM (Lunch / Morning)</option>
                     <option value="12:00">12:00 PM (Lunch)</option>
-                    <option value="13:00">1:00 PM (Lunch)</option>
-                    <option value="15:00">3:00 PM (Happy Hour / Coffee)</option>
+                    <option value="14:00">2:00 PM (Afternoon)</option>
+                    <option value="16:00">4:00 PM (Late Afternoon)</option>
                     <option value="17:30">5:30 PM (Dinner & Sunset)</option>
-                    <option value="18:30">6:30 PM (Dinner)</option>
+                    <option value="18:30">6:30 PM (Dinner / Evening Gala)</option>
                     <option value="19:30">7:30 PM (Dinner & Acoustic)</option>
-                    <option value="20:30">8:30 PM (Cocktails & Late Dinner)</option>
-                    <option value="21:30">9:30 PM (Late Night Bar)</option>
                   </select>
                 </div>
               </div>
@@ -289,24 +429,36 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs font-bold uppercase tracking-wider text-zinc-300 block mb-1.5">
-                    Party Size (Guests)
+                    Party Size (Guests {bookingType === 'event' ? '— Max 100' : ''})
                   </label>
-                  <div className="flex items-center gap-2">
-                    {[1, 2, 4, 6, 8, '10+'].map((num) => (
-                      <button
-                        key={String(num)}
-                        type="button"
-                        onClick={() => setGuestCount(typeof num === 'number' ? num : 10)}
-                        className={`flex-1 py-2 rounded-lg text-xs font-bold border transition-colors ${
-                          guestCount === (typeof num === 'number' ? num : 10)
-                            ? 'bg-[#dcb35c] text-black border-[#dcb35c]'
-                            : 'bg-white/5 border-white/10 text-zinc-400 hover:text-white'
-                        }`}
-                      >
-                        {num}
-                      </button>
-                    ))}
-                  </div>
+                  {bookingType === 'event' ? (
+                    <input
+                      type="number"
+                      min={10}
+                      max={100}
+                      value={guestCount}
+                      onChange={(e) => setGuestCount(Number(e.target.value))}
+                      className="w-full bg-[#121d15] border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-[#dcb35c]"
+                      placeholder="e.g. 50"
+                    />
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      {[1, 2, 4, 6, 8, '10+'].map((num) => (
+                        <button
+                          key={String(num)}
+                          type="button"
+                          onClick={() => setGuestCount(typeof num === 'number' ? num : 10)}
+                          className={`flex-1 py-2 rounded-lg text-xs font-bold border transition-colors ${
+                            guestCount === (typeof num === 'number' ? num : 10)
+                              ? 'bg-[#dcb35c] text-black border-[#dcb35c]'
+                              : 'bg-white/5 border-white/10 text-zinc-400 hover:text-white'
+                          }`}
+                        >
+                          {num}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -318,10 +470,15 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                     onChange={(e) => setSeatingArea(e.target.value)}
                     className="w-full bg-[#121d15] border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-[#dcb35c]"
                   >
-                    <option value="indoor-booth">Cozy Indoor Velvet Booth</option>
-                    <option value="patio">Outdoor Garden Acoustic Patio</option>
-                    <option value="bar">Bar Counter Lounge</option>
-                    <option value="private-hall">Luminarium Private Event Area</option>
+                    {bookingType === 'event' ? (
+                      <option value="private-hall">Luminarium Glass Hall & Setup</option>
+                    ) : (
+                      <>
+                        <option value="indoor-booth">Cozy Indoor Velvet Booth</option>
+                        <option value="patio">Outdoor Garden Acoustic Patio</option>
+                        <option value="bar">Bar Counter Lounge</option>
+                      </>
+                    )}
                   </select>
                 </div>
               </div>
@@ -387,11 +544,15 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
               {/* Special Requests */}
               <div>
                 <label className="text-xs font-bold uppercase tracking-wider text-zinc-300 block mb-1">
-                  Special Notes / Birthday / Dietary Requests
+                  Special Notes / Catering Inquiries / Theme
                 </label>
                 <textarea
                   rows={2}
-                  placeholder="e.g. Celebrating our anniversary, please arrange a quiet corner booth..."
+                  placeholder={
+                    bookingType === 'event'
+                      ? "e.g. Planning catering, projector setup, floral backdrop..."
+                      : "e.g. Celebrating our anniversary, please arrange a quiet corner booth..."
+                  }
                   value={specialRequests}
                   onChange={(e) => setSpecialRequests(e.target.value)}
                   className="w-full bg-[#121d15] border border-white/15 rounded-xl px-3.5 py-2 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-[#dcb35c]"
@@ -404,7 +565,11 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                 className="w-full py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider text-black bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 shadow-xl shadow-amber-950/30 hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2"
               >
                 <Send className="w-4 h-4" />
-                <span>Submit Table Reservation Request</span>
+                <span>
+                  {bookingType === 'event'
+                    ? 'Submit Luminarium Booking Request'
+                    : 'Submit Table Reservation Request'}
+                </span>
               </button>
             </form>
           )}
