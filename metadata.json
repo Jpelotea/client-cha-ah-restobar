@@ -1,0 +1,6 @@
+{
+  "name": "Cha'ah Restobar | Thai, Filipino & American Fusion in Butuan City",
+  "description": "Experience Butuan City's premier Thai, Filipino, and American fusion restobar. Handcrafted cocktails, signature Pad Thai, sizzling sisig, Sunday unli buffets, and live acoustic patio vibes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
